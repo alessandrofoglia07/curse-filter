@@ -1,0 +1,50 @@
+{
+    "name": "curse-filter",
+    "version": "1.0.0",
+    "description": "JavaScript multi-language curse word filter",
+    "funding": {
+        "type": "individual",
+        "url": "https://www.paypal.com/paypalme/AlessandroFoglia07"
+    },
+    "engines": {
+        "node": ">=6.0.0"
+    },
+    "scripts": {
+        "build:win": "rmdir /s /q lib && tsc",
+        "build:linux": "rm -rf lib && tsc",
+        "build": "npm run build:win || npm run build:linux",
+        "firstBuild": "tsc",
+        "prepublishOnly": "npm run build"
+    },
+    "main": "lib/index.js",
+    "files": [
+        "lib",
+        "__tests__",
+        "*.md"
+    ],
+    "exports": "./lib/index.js",
+    "directories": {
+        "lib": "lib"
+    },
+    "keywords": [
+        "curse",
+        "filter",
+        "bad",
+        "words",
+        "badwords",
+        "bad-words",
+        "cursing",
+        "curses",
+        "profanity",
+        "profane",
+        "swear",
+        "swearing"
+    ],
+    "author": "alessandrofoglia07",
+    "license": "MIT",
+    "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "^6.2.0",
+        "@typescript-eslint/parser": "^6.2.0",
+        "eslint": "^8.46.0"
+    }
+}
