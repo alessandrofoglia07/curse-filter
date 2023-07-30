@@ -1,7 +1,7 @@
 /**
  * List of supported languages
  */
-export declare const supportedLangs: string[];
+export declare const supportedLangs: SupportedLang[];
 /**
  * Supported language type
  */
@@ -20,3 +20,10 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * @returns Promise that resolves to filtered string
  */
 export declare const filterAsync: (str: string, select?: SupportedLang | SupportedLang[]) => Promise<string>;
+/**
+ * Detects profanity in a string
+ * @param str String to detect profanity
+ * @param select Language to detect
+ * @returns Whether or not the string contains profanity
+ */
+export declare const detect: (str: string, select?: SupportedLang | SupportedLang[]) => boolean;

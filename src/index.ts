@@ -35,7 +35,7 @@ const langs = new Map<string, string[]>([
 /**
  * List of supported languages
  */
-export const supportedLangs = [...langs.keys()];
+export const supportedLangs: SupportedLang[] = [...langs.keys()] as SupportedLang[];
 
 /**
  * Supported language type
@@ -125,4 +125,26 @@ export const filterAsync = async (str: string, select?: SupportedLang | Supporte
     searchString = new RegExp(regexArr.join('|'), 'gi');
     result = removeExcess(result.replace(searchString, '***'));
     return result;
+};
+
+/**
+ * Detects profanity in a string
+ * @param str String to detect profanity
+ * @param select Language to detect
+ * @returns Whether or not the string contains profanity
+ */
+export const detect = (str: string, select?: SupportedLang | SupportedLang[]): boolean => {
+    let arr: string[] = [];
+
+    if (select === undefined) {
+        arr = ([] as string[]).concat(...[...langs.values()]);
+    } else if (typeof select === 'string') {
+        arr = langs.get(select) || [];
+    } else if (select.length > 0) {
+        arr = ([] as string[]).concat(...select.map(lang => langs.get(lang) || []));
+    } else {
+        throw new Error('No language selected');
+    }
+
+    return arr.some(word => str.toLowerCase().includes(word.toLowerCase()));
 };

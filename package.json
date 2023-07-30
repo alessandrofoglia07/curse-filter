@@ -1,6 +1,6 @@
 {
     "name": "curse-filter",
-    "version": "2.0.0",
+    "version": "3.0.0",
     "description": "JavaScript multi-language curse word filter",
     "funding": {
         "type": "individual",
@@ -22,7 +22,6 @@
     "main": "lib/index.js",
     "files": [
         "lib",
-        "test",
         "*.md"
     ],
     "exports": "./lib/index.js",

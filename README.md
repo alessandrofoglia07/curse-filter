@@ -32,7 +32,7 @@ import { filter } from 'curse-filter';
 
 ## Usage
 
-### **supportedLangs**
+### **`supportedLangs`**
 
 ```typescript
 import { supportedLangs } from 'curse-filter';
@@ -40,7 +40,9 @@ import { supportedLangs } from 'curse-filter';
 console.log(supportedLangs); // This will log an array of supported languages
 ```
 
-### **filter()**
+### **`filter()`**
+
+The `filter()` function will return a string with all curse words replaced with asterisks ("\*\*\*").
 
 ```typescript
 import { filter } from 'curse-filter';
@@ -62,9 +64,9 @@ filter(str, 'en');
 filter(str, ['en', 'es', 'fr', 'it']);
 ```
 
-### **filterAsync()**
+### **`filterAsync()`**
 
-The filter() function, also has an asynchronous version
+The `filter()` function, also has an asynchronous version
 
 ```typescript
 import { filterAsync } from 'curse-filter';
@@ -78,7 +80,22 @@ filterAsync('Fuck you')
     });
 ```
 
-### **SupportedLang type**
+### **`detect()`**
+
+The `detect()` function will return a boolean representing whether or not curse words are in a string.
+
+```typescript
+import { detect } from 'curse-filter';
+
+// you can select the languages to detect in the second argument, like in the `filter()` function
+
+console.log(detect('Fuck you')); // true
+console.log(detect('Fuck you', 'en')); // true
+console.log(detect('Fuck you', ['en', 'fr'])); // true
+console.log(detect('I love you')); // false
+```
+
+### **`SupportedLang` type**
 
 ```typescript
 import { SupportedLang } from 'curse-filter';
