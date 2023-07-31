@@ -92,7 +92,17 @@ import { detect } from 'curse-filter';
 console.log(detect('Fuck you')); // true
 console.log(detect('Fuck you', 'en')); // true
 console.log(detect('Fuck you', ['en', 'fr'])); // true
+console.log(detect('Fuckyou', 'en')); // false, view next paragraph.
 console.log(detect('I love you')); // false
+```
+
+For more rigid use cases, you can use rigidMode option to also detect curse words that are part of bigger words (For example, for hiding them!).
+
+```typescript
+import { detect } from 'curse-filter';
+
+console.log(detect('Fuckyou', 'en')); // false, the word "Fuck" is inside of a bigger word: "Fuckyou"
+console.log(detect('Fuckyou', 'en', { rigidMode: true })); // true, the word "Fuck" is detected even if part of a bigger word
 ```
 
 ### **`SupportedLang` type**

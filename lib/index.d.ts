@@ -26,4 +26,6 @@ export declare const filterAsync: (str: string, select?: SupportedLang | Support
  * @param select Language to detect
  * @returns Whether or not the string contains profanity
  */
-export declare const detect: (str: string, select?: SupportedLang | SupportedLang[]) => boolean;
+export declare const detect: (str: string, select?: SupportedLang | SupportedLang[], options?: {
+    rigidMode?: boolean;
+}) => boolean;

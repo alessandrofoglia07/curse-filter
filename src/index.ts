@@ -83,8 +83,10 @@ export const filter = (str: string, select?: SupportedLang | SupportedLang[]) =>
     } else {
         throw new Error('No language selected');
     }
-    searchString = new RegExp(regexArr.join('|'), 'gi');
-    result = removeExcess(result.replace(searchString, '***'));
+    if (regexArr.length > 0) {
+        searchString = new RegExp(regexArr.join('|'), 'gi');
+        result = removeExcess(result.replace(searchString, '***'));
+    }
     return result;
 };
 
@@ -133,7 +135,7 @@ export const filterAsync = async (str: string, select?: SupportedLang | Supporte
  * @param select Language to detect
  * @returns Whether or not the string contains profanity
  */
-export const detect = (str: string, select?: SupportedLang | SupportedLang[]): boolean => {
+export const detect = (str: string, select?: SupportedLang | SupportedLang[], options?: { rigidMode?: boolean; }): boolean => {
     let arr: string[] = [];
 
     if (select === undefined) {
@@ -146,5 +148,12 @@ export const detect = (str: string, select?: SupportedLang | SupportedLang[]): b
         throw new Error('No language selected');
     }
 
-    return arr.some(word => str.toLowerCase().includes(word.toLowerCase()));
+    if (options && options.rigidMode) {
+        return arr.some(word => str.toLowerCase().includes(word.toLowerCase()));
+    } else {
+        return arr.some(word => {
+            const regex = new RegExp(`\\b${word}\\b`, 'i');
+            return regex.test(str);
+        });
+    }
 };

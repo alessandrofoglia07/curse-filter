@@ -56,6 +56,13 @@ describe('detect', () => {
         expect(result).toBe(false);
     });
 
+    it('should work with rigidmode', () => {
+        const result = detect('Fuckyou', 'en', { rigidMode: true });
+        const result2 = detect('Fuckyou', 'en');
+        expect(result).toBe(true);
+        expect(result2).toBe(false);
+    });
+
     it('should work with really long texts', () => {
         const result = detect(longText, 'it');
         expect(result).toBe(false);
