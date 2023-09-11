@@ -21,8 +21,8 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * @example
  * // in async scope
  * await detect('Fuck you') // true
- * await detect('Fuckyou') // true
- * await detect('Fuckyou', true, { rigidMode: true }) // false
+ * await detect('Fuckyou') // false
+ * await detect('Fuckyou', true, { rigidMode: true }) // true
  */
 export declare const detect: (str: string, select?: SupportedLang | SupportedLang[] | true, options?: {
     rigidMode?: boolean;

@@ -17,8 +17,8 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * @param options Options for detection
  * @returns `true` if profanity is detected, otherwise `false`
  * @example detect('Fuck you') // true
- * detect('Fuckyou') // true
- * detect('Fuckyou', true, { rigidMode: true }) // false
+ * detect('Fuckyou') // false
+ * detect('Fuckyou', true, { rigidMode: true }) // true
  */
 export declare const detect: (str: string, select?: SupportedLang | SupportedLang[] | true, options?: {
     rigidMode?: boolean;
