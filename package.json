@@ -1,13 +1,13 @@
 {
     "name": "curse-filter",
-    "version": "3.1.0",
+    "version": "4.0.0",
     "description": "JavaScript multi-language curse word filter",
     "funding": {
         "type": "individual",
         "url": "https://www.paypal.com/paypalme/AlessandroFoglia07"
     },
     "engines": {
-        "node": ">=6.0.0"
+        "node": ">=12.7.0"
     },
     "type": "module",
     "scripts": {
@@ -24,7 +24,16 @@
         "lib",
         "*.md"
     ],
-    "exports": "./lib/index.js",
+    "exports": {
+        ".": {
+            "default": "./lib/index.js",
+            "types": "./lib/index.d.ts"
+        },
+        "./promises": {
+            "default": "./lib/promises.js",
+            "types": "./lib/promises.d.ts"
+        }
+    },
     "directories": {
         "lib": "lib"
     },

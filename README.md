@@ -4,7 +4,7 @@
 
 # **curse-filter**
 
-**curse-filter** is a Node.js module that allows you to filter out curse words (from multiple languages) from a string.
+**curse-filter** is a fully-equipped Node.js library that simplifies profanity filtering.
 
 [![npm version](https://img.shields.io/npm/v/curse-filter.svg?style=flat-square)](https://www.npmjs.org/package/curse-filter)
 [![install size](https://packagephobia.com/badge?p=curse-filter@latest)](https://packagephobia.com/result?p=curse-filter@latest)
@@ -47,9 +47,10 @@ The `filter()` function will return a string with all curse words replaced with 
 ```typescript
 import { filter } from 'curse-filter';
 
-const result = filter('Fuck you');
-
-console.log(result); // "*** you"
+filter('fuck you'); // '*** you'
+filter('fuck you', 'en'); // '*** you'
+filter('fuck you, coglione', ['en', 'it']); // '*** you, ***'
+filter('fuck you, coglione', ['en', 'it'], 'customPlaceholder'); // 'customPlaceholder you, customPlaceholder'
 ```
 
 Alternately, if you want to **reduce filtering time**, you can pass as second parameter a string of an array of string (all supported languages).
@@ -62,22 +63,6 @@ const str = '<...>';
 filter(str); // automatically selects all languages
 filter(str, 'en');
 filter(str, ['en', 'es', 'fr', 'it']);
-```
-
-### **`filterAsync()`**
-
-The `filter()` function, also has an asynchronous version
-
-```typescript
-import { filterAsync } from 'curse-filter';
-
-filterAsync('Fuck you')
-    .then((filteredString) => {
-        console.log(filteredString); // "*** you"
-    })
-    .catch((error) => {
-        console.log(error);
-    });
 ```
 
 ### **`detect()`**
@@ -103,6 +88,23 @@ import { detect } from 'curse-filter';
 
 console.log(detect('Fuckyou', 'en')); // false, the word "Fuck" is inside of a bigger word: "Fuckyou"
 console.log(detect('Fuckyou', 'en', { rigidMode: true })); // true, the word "Fuck" is detected even if part of a bigger word
+```
+
+## **Promise versions**
+
+You can access promise versions of filter and detect functions from `curse-filter/promises`.
+
+```ts
+import { filter, detect } from 'curse-filter/promises';
+
+const main = async () => {
+    const filter = await filter('Fuck you');
+    const detect = await detect('Fuck you');
+
+    console.log(filter, detect); // '*** you', true
+};
+
+main();
 ```
 
 ### **`SupportedLang` type**
