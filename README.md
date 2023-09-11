@@ -4,7 +4,7 @@
 
 # **curse-filter**
 
-**curse-filter** is a fully-equipped Node.js library that simplifies profanity filtering.
+**curse-filter** is a fully-equipped Node.js library that simplifies profanity filtering in _15+ different languages_.
 
 [![npm version](https://img.shields.io/npm/v/curse-filter.svg?style=flat-square)](https://www.npmjs.org/package/curse-filter)
 [![install size](https://packagephobia.com/badge?p=curse-filter@latest)](https://packagephobia.com/result?p=curse-filter@latest)
@@ -98,10 +98,10 @@ You can access promise versions of filter and detect functions from `curse-filte
 import { filter, detect } from 'curse-filter/promises';
 
 const main = async () => {
-    const filter = await filter('Fuck you');
-    const detect = await detect('Fuck you');
+    const filtered = await filter('Fuck you');
+    const detected = await detect('Fuck you');
 
-    console.log(filter, detect); // '*** you', true
+    console.log(filtered, detected); // '*** you', true
 };
 
 main();
