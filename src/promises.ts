@@ -54,8 +54,8 @@ export const filter = async (str: string, select?: SupportedLang | SupportedLang
  * @example
  * // in async scope
  * await detect('Fuck you') // true
- * await detect('Fuckyou') // true
- * await detect('Fuckyou', true, { rigidMode: true }) // false
+ * await detect('Fuckyou') // false
+ * await detect('Fuckyou', true, { rigidMode: true }) // true
  */
 export const detect = async (str: string, select?: SupportedLang | SupportedLang[] | true, options?: { rigidMode?: boolean }): Promise<boolean> => {
     let arr: string[] = [];
