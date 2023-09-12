@@ -1,4 +1,4 @@
-import { SupportedLang, langs, removeExcess } from './utils.js';
+import { SupportedLang, langs, removeExcess, CustomKeywords } from './utils.js';
 
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
@@ -38,6 +38,15 @@ export const filter = (str: string, select?: SupportedLang | SupportedLang[] | t
     } else {
         throw new Error('No language selected');
     }
+
+    if (CustomKeywords.size > 0) {
+        regexArr.push(
+            Array.from(CustomKeywords)
+                .map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'))
+                .join('|')
+        );
+    }
+
     if (regexArr.length > 0) {
         searchString = new RegExp(regexArr.join('|'), 'gi');
         result = removeExcess(result.replace(searchString, placeholder), placeholder);
@@ -59,13 +68,17 @@ export const detect = (str: string, select?: SupportedLang | SupportedLang[] | t
     let arr: string[] = [];
 
     if (select === undefined || typeof select === 'boolean') {
-        arr = ([] as string[]).concat(...[...langs.values()]);
+        arr = ([] as string[]).concat(...langs.values());
     } else if (typeof select === 'string') {
         arr = langs.get(select) || [];
     } else if (select.length > 0) {
         arr = ([] as string[]).concat(...select.map((lang) => langs.get(lang) || []));
     } else {
         throw new Error('No language selected');
+    }
+
+    if (CustomKeywords.size > 0) {
+        arr = [...arr, ...Array.from(CustomKeywords)];
     }
 
     if (options && options.rigidMode) {

@@ -1,2 +1,2 @@
 export { detect, filter } from './sync.js';
-export { SupportedLang, supportedLangs } from './utils.js';
+export { SupportedLang, supportedLangs, CustomKeywords, KeywordsSet, KeywordsSetConstructor } from './utils.js';

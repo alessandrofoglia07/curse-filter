@@ -24,6 +24,10 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * await detect('Fuckyou') // false
  * await detect('Fuckyou', true, { rigidMode: true }) // true
  */
-export declare const detect: (str: string, select?: SupportedLang | SupportedLang[] | true, options?: {
-    rigidMode?: boolean;
-}) => Promise<boolean>;
+export declare const detect: (
+    str: string,
+    select?: SupportedLang | SupportedLang[] | true,
+    options?: {
+        rigidMode?: boolean;
+    }
+) => Promise<boolean>;

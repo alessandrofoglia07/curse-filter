@@ -14,6 +14,37 @@ import sk from './langs/sk.js';
 import th from './langs/th.js';
 import uk from './langs/uk.js';
 
+export interface KeywordsSet<T> extends Set<T> {
+    addKeywords(...keywords: string[] | string[][]): void;
+}
+
+export interface KeywordsSetConstructor {
+    new <T = any>(values?: readonly T[] | null): KeywordsSet<T>;
+    readonly prototype: KeywordsSet<any>;
+}
+
+const KeywordsSet: KeywordsSetConstructor = Set as never;
+
+KeywordsSet.prototype.addKeywords = function (...keywords: string[] | string[][]) {
+    keywords.forEach((keyword) => {
+        if (Array.isArray(keyword)) {
+            keyword.forEach((word) => {
+                this.add(word);
+            });
+        } else {
+            this.add(keyword);
+        }
+    });
+};
+/**
+ * Set of custom keywords to use in addition to the default ones
+ * @example
+ * CustomKeywords.add('foo');
+ * CustomKeywords.addKeywords('foo', 'bar');
+ * CustomKeywords.delete('foo');
+ */
+export const CustomKeywords = new KeywordsSet<string>();
+
 export const langs = new Map<string, string[]>([
     ['af', af],
     ['cz', cz],

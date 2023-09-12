@@ -1,7 +1,7 @@
 {
     "name": "curse-filter",
-    "version": "4.0.2",
-    "description": "JavaScript multi-language curse word filter",
+    "version": "5.0.0",
+    "description": "JavaScript/Typescript multi-language curse word filter",
     "funding": {
         "type": "individual",
         "url": "https://www.paypal.com/paypalme/AlessandroFoglia07"
@@ -15,15 +15,25 @@
         "build:linux": "rm -rf lib && tsc",
         "build": "npm run build:win || npm run build:linux",
         "firstBuild": "tsc",
-        "prepublishOnly": "npm run build",
-        "pretest": "npm run build:win || npm run build:linux",
-        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js"
+        "prepublishOnly": "npm run build && npm run format",
+        "pretest": "npm run build",
+        "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
+        "format": "prettier . --write",
+        "checkFormat": "prettier . --check"
     },
     "main": "lib/index.js",
     "files": [
         "lib",
         "*.md"
     ],
+    "bugs": {
+        "url": "https://github.com/alessandrofoglia07/curse-filter/issues"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/alessandrofoglia07/curse-filter"
+    },
+    "homepage": "https://github.com/alessandrofoglia07/curse-filter/blob/main/README.md",
     "exports": {
         ".": {
             "default": "./lib/index.js",
@@ -32,7 +42,8 @@
         "./promises": {
             "default": "./lib/promises.js",
             "types": "./lib/promises.d.ts"
-        }
+        },
+        "./package.json": "./package.json"
     },
     "directories": {
         "lib": "lib"
@@ -58,6 +69,7 @@
         "@typescript-eslint/eslint-plugin": "^6.2.0",
         "@typescript-eslint/parser": "^6.2.0",
         "eslint": "^8.46.0",
-        "jest": "^29.6.2"
+        "jest": "^29.6.2",
+        "prettier": "^3.0.3"
     }
 }

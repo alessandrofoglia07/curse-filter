@@ -1,4 +1,4 @@
-import { langs, removeExcess, SupportedLang } from './utils.js';
+import { langs, removeExcess, SupportedLang, CustomKeywords } from './utils.js';
 
 /**
  * *Async version* of `filter()` function. Filters a string for profanity. It replaces profanity with "`***`".
@@ -17,21 +17,27 @@ export const filter = async (str: string, select?: SupportedLang | SupportedLang
     let searchString: RegExp;
     const regexArr: string[] = [];
 
+    // If no language is specified, select all languages
     if (select === undefined || typeof select === 'boolean') {
         langs.forEach((arr) => {
+            // for each language, add every word, converted to regex, to regex array
             regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
         });
     } else if (typeof select === 'string') {
+        // If a single language is specified, select it
         const arr = langs.get(select);
         if (arr) {
+            // add every bad word of a language to regex array
             regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
         } else {
             throw new Error(`Language '${select}' is not supported`);
         }
     } else if (select.length > 0) {
+        // If an array of languages is specified, select them
         select.forEach((lang) => {
             const arr = langs.get(lang);
             if (arr) {
+                // for each language, add every word, converted to regex, to regex array
                 regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
             } else {
                 throw new Error(`Language '${lang}' is not supported`);
@@ -40,7 +46,18 @@ export const filter = async (str: string, select?: SupportedLang | SupportedLang
     } else {
         throw new Error('No language selected');
     }
+
+    if (CustomKeywords.size > 0) {
+        regexArr.push(
+            Array.from(CustomKeywords)
+                .map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'))
+                .join('|')
+        );
+    }
+
+    // Create a RegExp object with the selected languages
     searchString = new RegExp(regexArr.join('|'), 'gi');
+    // Replace all instances of the selected languages with the placeholder
     result = removeExcess(result.replace(searchString, placeholder), placeholder);
     return result;
 };
@@ -61,13 +78,17 @@ export const detect = async (str: string, select?: SupportedLang | SupportedLang
     let arr: string[] = [];
 
     if (select === undefined || typeof select === 'boolean') {
-        arr = ([] as string[]).concat(...[...langs.values()]);
+        arr = ([] as string[]).concat(...langs.values());
     } else if (typeof select === 'string') {
         arr = langs.get(select) || [];
     } else if (select.length > 0) {
         arr = ([] as string[]).concat(...select.map((lang) => langs.get(lang) || []));
     } else {
         throw new Error('No language selected');
+    }
+
+    if (CustomKeywords.size > 0) {
+        arr = [...arr, ...Array.from(CustomKeywords)];
     }
 
     if (options && options.rigidMode) {

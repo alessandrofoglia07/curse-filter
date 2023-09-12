@@ -20,6 +20,10 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * detect('Fuckyou') // false
  * detect('Fuckyou', true, { rigidMode: true }) // true
  */
-export declare const detect: (str: string, select?: SupportedLang | SupportedLang[] | true, options?: {
-    rigidMode?: boolean;
-}) => boolean;
+export declare const detect: (
+    str: string,
+    select?: SupportedLang | SupportedLang[] | true,
+    options?: {
+        rigidMode?: boolean;
+    }
+) => boolean;
