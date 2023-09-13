@@ -1,4 +1,4 @@
-import { SupportedLang } from '../utils';
+import { SupportedLang } from '../utils.js';
 /**
  * @class MiddlewaresConfig
  * @description

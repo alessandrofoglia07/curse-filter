@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { detect } from '../index';
-import { MiddlewaresConfig } from './middlewaresConfig';
+import { detect } from '../index.js';
+import { MiddlewaresConfig } from './middlewaresConfig.js';
 
 /**
  * Middleware to detect bad words in **request body**.

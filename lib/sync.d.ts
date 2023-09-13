@@ -1,4 +1,4 @@
-import { SupportedLang } from './utils';
+import { SupportedLang } from './utils.js';
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
  * @param str String to filter
