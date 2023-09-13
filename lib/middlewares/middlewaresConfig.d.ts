@@ -4,7 +4,7 @@ import { SupportedLang } from '../utils';
  * @description
  * This class is used to configure the middlewares for express.js.
  */
-declare class MiddlewaresConfig {
+export declare class MiddlewaresConfig {
     /**
      * @property `onError`
      * @description
@@ -41,4 +41,3 @@ declare class MiddlewaresConfig {
      */
     static errorCode: number;
 }
-export default MiddlewaresConfig;
