@@ -1,4 +1,4 @@
-import { SupportedLang } from './utils.js';
+import { SupportedLang } from './utils';
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
  * @param str String to filter
@@ -20,10 +20,6 @@ export declare const filter: (str: string, select?: SupportedLang | SupportedLan
  * detect('Fuckyou') // false
  * detect('Fuckyou', true, { rigidMode: true }) // true
  */
-export declare const detect: (
-    str: string,
-    select?: SupportedLang | SupportedLang[] | true,
-    options?: {
-        rigidMode?: boolean;
-    }
-) => boolean;
+export declare const detect: (str: string, select?: SupportedLang | SupportedLang[] | true, options?: {
+    rigidMode?: boolean;
+}) => boolean;

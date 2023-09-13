@@ -1,2 +1,4 @@
-export { detect, filter } from './sync.js';
-export { SupportedLang, supportedLangs, CustomKeywords, KeywordsSet, KeywordsSetConstructor } from './utils.js';
+export { detect, filter } from './sync';
+export { SupportedLang, supportedLangs, CustomKeywords, KeywordsSet, KeywordsSetConstructor } from './utils';
+export { detectMiddleware } from './middlewares/detectMiddleware';
+export { MiddlewaresConfig } from './middlewares/middlewaresConfig';

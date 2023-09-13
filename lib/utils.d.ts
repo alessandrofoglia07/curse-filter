@@ -1,5 +1,6 @@
+type Keywords = (string | string[] | string[][])[];
 export interface KeywordsSet<T> extends Set<T> {
-    addKeywords(...keywords: string[] | string[][]): void;
+    addKeywords(...keywords: Keywords): void;
 }
 export interface KeywordsSetConstructor {
     new <T = any>(values?: readonly T[] | null): KeywordsSet<T>;
@@ -29,3 +30,4 @@ export type SupportedLang = 'af' | 'cz' | 'de' | 'en' | 'es' | 'fi' | 'fr' | 'hi
  * Removes excess letters followed or preceded by "***" in a string.
  */
 export declare const removeExcess: (str: string, placeholder?: string) => string;
+export {};

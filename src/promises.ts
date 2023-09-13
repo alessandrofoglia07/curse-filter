@@ -1,4 +1,4 @@
-import { langs, removeExcess, SupportedLang, CustomKeywords } from './utils.js';
+import { langs, removeExcess, SupportedLang, CustomKeywords } from './utils';
 
 /**
  * *Async version* of `filter()` function. Filters a string for profanity. It replaces profanity with "`***`".

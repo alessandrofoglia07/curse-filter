@@ -124,6 +124,51 @@ const result = filter('Hey John!');
 console.log(result); // '*** John!'
 ```
 
+## **Express.js middlewares**
+
+curse-filter comes with built-in `express.js` middlewares.
+
+### **`detectMiddleware`** middleware
+
+The `detectMiddleware` middleware analizes the whole `req.body` object for curses.
+
+```ts
+import express, { Request, Response } from 'express';
+import { detectMiddleware } from 'curse-filter';
+import { registerUserToDB } from './db';
+
+const app = express();
+
+app.use(express.json());
+
+app.post('/register', detectMiddleware, async (req: Request, res: Response) => {
+    /* If the request body contains curse words, the middleware will automatically 
+    send a 422 response with a message containing the detected curse words.
+    If no curse words are detected, the middleware will call the next() function. */
+
+    await registerUserToDB(req.body);
+
+    res.status(200).json({ message: 'User registered!' });
+});
+```
+
+You can configure the middleware with the following options:
+
+```ts
+// Class for configuring the middleware
+import { MiddlewaresConfig } from 'curse-filter';
+
+// Default values:
+
+MiddlewareConfig.onError = null; // Called when a curse word is detected, before sending the response
+
+MiddlewareConfig.detectOptions = {}; // Options for the detect function
+
+MiddlewareConfig.errorMessage = 'Not allowed content detected.'; // Message sent in the response
+
+MiddlewareConfig.statusCode = 422; // Status code sent in the response
+```
+
 ## **Typescript**
 
 ### **`SupportedLang` type**

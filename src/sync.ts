@@ -1,4 +1,4 @@
-import { SupportedLang, langs, removeExcess, CustomKeywords } from './utils.js';
+import { SupportedLang, langs, removeExcess, CustomKeywords } from './utils';
 
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
