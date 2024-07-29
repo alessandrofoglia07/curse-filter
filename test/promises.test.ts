@@ -7,12 +7,12 @@ CustomKeywords.add('bonjour');
 
 describe('filter', () => {
     it('should filter in one language', async () => {
-        const promise = filter('Fuck you', 'en');
+        const promise = filter('Fuck you', { lang: 'en' });
         expect(promise).resolves.toBe('*** you');
     });
 
     it('should filter in two languages', async () => {
-        const promise = filter('Fuck you, coglione!', ['en', 'it']);
+        const promise = filter('Fuck you, coglione!', { lang: ['en', 'it'] });
         expect(promise).resolves.toBe('*** you, ***!');
     });
 
@@ -22,7 +22,7 @@ describe('filter', () => {
     });
 
     it('should filter with custom keywords', () => {
-        const promise = filter('bonjour hey 123', 'en');
+        const promise = filter('bonjour hey 123', { lang: 'en' });
         expect(promise).resolves.toBe('*** hey 123');
     });
 });
@@ -34,12 +34,12 @@ describe('detect', () => {
     });
 
     it('should detect bad words in multiple languages', () => {
-        const promise = detect('Fuck you, coglione', ['en', 'it']);
+        const promise = detect('Fuck you, coglione', { lang: ['en', 'it'] });
         expect(promise).resolves.toBe(true);
     });
 
     it('should only detect bad words in selected languages', () => {
-        const promise = detect('Fuck you', 'fr');
+        const promise = detect('Fuck you', { lang: 'fr' });
         expect(promise).resolves.toBe(false);
     });
 
@@ -49,8 +49,8 @@ describe('detect', () => {
     });
 
     it('should work with rigidmode', () => {
-        const promise = detect('Fuckyou', 'en', { rigidMode: true });
-        const promise1 = detect('Fuckyou', 'en');
+        const promise = detect('Fuckyou', { lang: 'en', rigidMode: true });
+        const promise1 = detect('Fuckyou', { lang: 'en' });
         expect(promise).resolves.toBe(true);
         expect(promise1).resolves.toBe(false);
     });
@@ -63,7 +63,7 @@ describe('detect', () => {
     });
 
     it('should detect custom keywords', () => {
-        const promise = detect('bonjour hey 123', 'en');
+        const promise = detect('bonjour hey 123', { lang: 'en' });
         expect(promise).resolves.toBe(true);
     });
 });

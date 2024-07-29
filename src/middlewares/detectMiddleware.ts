@@ -20,7 +20,7 @@ export const detectMiddleware = (req: Request, res: Response, next: NextFunction
                 check(item);
             });
         } else if (typeof obj === 'string') {
-            if (detect(obj, MiddlewaresConfig.detectOptions.select, MiddlewaresConfig.detectOptions.options)) {
+            if (detect(obj, { ...MiddlewaresConfig.detectOptions })) {
                 ok = false;
                 if (typeof MiddlewaresConfig.onError === 'function') {
                     MiddlewaresConfig.onError();

@@ -6,12 +6,12 @@ CustomKeywords.add('bonjour');
 
 describe('filter', () => {
     it('should filter in one language', () => {
-        const result = filter('Fuck you', 'en');
+        const result = filter('Fuck you', { lang: 'en' });
         expect(result).toBe('*** you');
     });
 
     it('should filter in two languages', () => {
-        const result = filter('Fuck you, coglione!', ['en', 'it']);
+        const result = filter('Fuck you, coglione!', { lang: ['en', 'it'] });
         expect(result).toBe('*** you, ***!');
     });
 
@@ -21,7 +21,7 @@ describe('filter', () => {
     });
 
     it('should filter with custom keywords', () => {
-        const result = filter('bonjour hey 123', 'en');
+        const result = filter('bonjour hey 123', { lang: 'en' });
         expect(result).toBe('*** hey 123');
     });
 });
@@ -33,12 +33,12 @@ describe('detect', () => {
     });
 
     it('should detect bad words in multiple languages', () => {
-        const result = detect('Fuck you, coglione', ['en', 'it']);
+        const result = detect('Fuck you, coglione', { lang: ['en', 'it'] });
         expect(result).toBe(true);
     });
 
     it('should only detect bad words in selected languages', () => {
-        const result = detect('Fuck you', 'fr');
+        const result = detect('Fuck you', { lang: 'fr' });
         expect(result).toBe(false);
     });
 
@@ -48,8 +48,8 @@ describe('detect', () => {
     });
 
     it('should work with rigidmode', () => {
-        const result = detect('Fuckyou', 'en', { rigidMode: true });
-        const result2 = detect('Fuckyou', 'en');
+        const result = detect('Fuckyou', { lang: 'en', rigidMode: true });
+        const result2 = detect('Fuckyou', { lang: 'en' });
         expect(result).toBe(true);
         expect(result2).toBe(false);
     });
@@ -62,7 +62,7 @@ describe('detect', () => {
     });
 
     it('should detect custom keywords', () => {
-        const result = detect('bonjour hey 123', 'en');
+        const result = detect('bonjour hey 123', { lang: 'en' });
         expect(result).toBe(true);
     });
 });

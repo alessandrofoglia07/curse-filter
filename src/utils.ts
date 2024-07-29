@@ -86,3 +86,37 @@ export const removeExcess = (str: string, placeholder: string = '***'): string =
     const regex = /([A-Za-z]+)?\*\*\*([A-Za-z]+)?/g;
     return str.replace(regex, placeholder);
 };
+
+export interface Options {
+    /**
+     * Language to use. Use `true` or `undefined` to use all languages, or a language / array of languages to use.
+     * @default true
+     */
+    lang?: SupportedLang | SupportedLang[] | true;
+}
+
+export interface FilterOptions extends Options {
+    /**
+     * Placeholder to use instead of "***"
+     * @default '***'
+     * @example
+     * await filter('Fuck you', { placeholder: 'myString' }) // 'myString you'
+     */
+    placeholder?: string;
+}
+
+export interface DetectOptions extends Options {
+    /**
+     * Whether to use the "rigid" mode, which is more strict
+     * @default false
+     * @example
+     * await detect('Fuckyou') // false
+     * await detect('Fuckyou', { rigidMode: true }) // true
+     */
+    rigidMode?: boolean;
+    /**
+     * Amount of chunk of words processed on every iteration. Adjust this based on your application's performance characteristics.
+     * @default 100
+     */
+    processedChunkSize?: number;
+}

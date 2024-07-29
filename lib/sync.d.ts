@@ -1,29 +1,23 @@
-import { SupportedLang } from './utils.js';
+import { DetectOptions, FilterOptions } from './utils.js';
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
  * @param str String to filter
- * @param select `true` or `undefined` to use all languages, or a language / array of languages to use
- * @param placeholder Placeholder to use instead of "***"
+ * @param options Options for filtering
  * @returns Filtered string
- * @example filter('fuck you') // '*** you'
- * filter('fuck you', 'en') // '*** you'
- * filter('fuck you, coglione', ['en', 'it']) // '*** you, ***'
+ * @example
+ * filter('fuck you') // '*** you'
+ * filter('fuck you', { lang: 'en' }) // '*** you'
+ * filter('fuck you, coglione', { lang: ['en', 'it'] }) // '*** you, ***'
  */
-export declare const filter: (str: string, select?: SupportedLang | SupportedLang[] | true, placeholder?: string) => string;
+export declare const filter: (str: string, options?: FilterOptions) => string;
 /**
  * Detects profanity in a string.
  * @param str String to detect profanity in
- * @param select `true` or `undefined` to use all languages, or a language / array of languages to use
  * @param options Options for detection
  * @returns `true` if profanity is detected, otherwise `false`
- * @example detect('Fuck you') // true
+ * @example
+ * detect('Fuck you') // true
  * detect('Fuckyou') // false
- * detect('Fuckyou', true, { rigidMode: true }) // true
+ * detect('Fuckyou', { rigidMode: true }) // true
  */
-export declare const detect: (
-    str: string,
-    select?: SupportedLang | SupportedLang[] | true,
-    options?: {
-        rigidMode?: boolean;
-    }
-) => boolean;
+export declare const detect: (str: string, options?: DetectOptions) => boolean;

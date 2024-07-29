@@ -1,78 +1,75 @@
-import { SupportedLang, langs, removeExcess, CustomKeywords } from './utils.js';
+import { langs, removeExcess, CustomKeywords, DetectOptions, FilterOptions } from './utils.js';
 
 /**
  * Filters a string for profanity. It replaces profanity with "`***`".
  * @param str String to filter
- * @param select `true` or `undefined` to use all languages, or a language / array of languages to use
- * @param placeholder Placeholder to use instead of "***"
+ * @param options Options for filtering
  * @returns Filtered string
- * @example filter('fuck you') // '*** you'
- * filter('fuck you', 'en') // '*** you'
- * filter('fuck you, coglione', ['en', 'it']) // '*** you, ***'
+ * @example
+ * filter('fuck you') // '*** you'
+ * filter('fuck you', { lang: 'en' }) // '*** you'
+ * filter('fuck you, coglione', { lang: ['en', 'it'] }) // '*** you, ***'
  */
-export const filter = (str: string, select?: SupportedLang | SupportedLang[] | true, placeholder: string = '***') => {
+export const filter = (str: string, options?: FilterOptions) => {
     let result = str;
     let searchString: RegExp;
+    const escapeRegExp = (word: string) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&');
     const regexArr: string[] = [];
 
-    if (select === undefined || typeof select === 'boolean') {
-        langs.forEach((arr) => {
-            regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
-        });
-    } else if (typeof select === 'string') {
-        const arr = langs.get(select);
-        if (arr) {
-            regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
-        } else {
-            throw new Error(`Language '${select}' is not supported`);
+    const lang = options?.lang;
+    const placeholder = options?.placeholder ?? '***';
+
+    if (lang === undefined || lang === true) {
+        for (const arr of langs.values()) {
+            regexArr.push(arr.map(escapeRegExp).join('|'));
         }
-    } else if (select.length > 0) {
-        select.forEach((lang) => {
-            const arr = langs.get(lang);
-            if (arr) {
-                regexArr.push(arr.map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&')).join('|'));
-            } else {
-                throw new Error(`Language '${lang}' is not supported`);
-            }
-        });
+    } else if (typeof lang === 'string') {
+        const arr = langs.get(lang);
+        if (!arr) throw new Error(`Language '${lang}' is not supported`);
+        regexArr.push(arr.map(escapeRegExp).join('|'));
+    } else if (lang.length > 0) {
+        for (const el of lang) {
+            const arr = langs.get(el);
+            if (!arr) throw new Error(`Language '${el}' is not supported`);
+            regexArr.push(arr.map(escapeRegExp).join('|'));
+        }
     } else {
         throw new Error('No language selected');
     }
 
     if (CustomKeywords.size > 0) {
-        regexArr.push(
-            Array.from(CustomKeywords)
-                .map((word) => word.replace(/[.*+\-?^${}()|[\]\\]/g, '\\$&'))
-                .join('|')
-        );
+        regexArr.push(Array.from(CustomKeywords).map(escapeRegExp).join('|'));
     }
 
     if (regexArr.length > 0) {
         searchString = new RegExp(regexArr.join('|'), 'gi');
         result = removeExcess(result.replace(searchString, placeholder), placeholder);
     }
+
     return result;
 };
 
 /**
  * Detects profanity in a string.
  * @param str String to detect profanity in
- * @param select `true` or `undefined` to use all languages, or a language / array of languages to use
  * @param options Options for detection
  * @returns `true` if profanity is detected, otherwise `false`
- * @example detect('Fuck you') // true
+ * @example
+ * detect('Fuck you') // true
  * detect('Fuckyou') // false
- * detect('Fuckyou', true, { rigidMode: true }) // true
+ * detect('Fuckyou', { rigidMode: true }) // true
  */
-export const detect = (str: string, select?: SupportedLang | SupportedLang[] | true, options?: { rigidMode?: boolean }): boolean => {
+export const detect = (str: string, options?: DetectOptions): boolean => {
     let arr: string[] = [];
 
-    if (select === undefined || typeof select === 'boolean') {
+    const lang = options?.lang;
+
+    if (lang === undefined || typeof lang === 'boolean') {
         arr = ([] as string[]).concat(...langs.values());
-    } else if (typeof select === 'string') {
-        arr = langs.get(select) || [];
-    } else if (select.length > 0) {
-        arr = ([] as string[]).concat(...select.map((lang) => langs.get(lang) || []));
+    } else if (typeof lang === 'string') {
+        arr = langs.get(lang) || [];
+    } else if (lang.length > 0) {
+        arr = ([] as string[]).concat(...lang.map((el) => langs.get(el) || []));
     } else {
         throw new Error('No language selected');
     }
@@ -81,7 +78,7 @@ export const detect = (str: string, select?: SupportedLang | SupportedLang[] | t
         arr = [...arr, ...Array.from(CustomKeywords)];
     }
 
-    if (options && options.rigidMode) {
+    if (options?.rigidMode) {
         return arr.some((word) => str.toLowerCase().includes(word.toLowerCase()));
     } else {
         return arr.some((word) => {

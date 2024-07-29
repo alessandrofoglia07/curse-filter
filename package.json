@@ -1,6 +1,6 @@
 {
     "name": "curse-filter",
-    "version": "5.2.4",
+    "version": "6.0.0",
     "description": "JavaScript/Typescript multi-language curse word filter",
     "funding": {
         "type": "individual",
@@ -17,9 +17,10 @@
         "firstBuild": "tsc",
         "prepublishOnly": "npm run build && npm run format",
         "pretest": "npm run build",
-        "test": "jest",
+        "test": "jest && npm run smokeTest",
         "format": "prettier . --write",
-        "checkFormat": "prettier . --check"
+        "checkFormat": "prettier . --check",
+        "smokeTest": "node ./test/smoketest/smokeTest.js"
     },
     "main": "lib/index.js",
     "files": [

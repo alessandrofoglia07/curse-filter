@@ -1,4 +1,4 @@
-import { SupportedLang } from '../utils.js';
+import { DetectOptions } from '../utils.js';
 /**
  * @class MiddlewaresConfig
  * @description
@@ -18,12 +18,7 @@ export declare class MiddlewaresConfig {
      * Options to be passed to the `detect` function of middlewares.
      * @default {} // (no specific options are passed)
      */
-    static detectOptions: {
-        select?: SupportedLang[] | SupportedLang | true;
-        options?: {
-            rigidMode?: boolean;
-        };
-    };
+    static detectOptions: DetectOptions;
     /**
      * @property `errorMessage`
      * @description

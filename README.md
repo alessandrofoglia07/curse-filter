@@ -30,6 +30,10 @@ This module is first thought for Typescript/ESM, so this is the recommended way 
 import { filter } from 'curse-filter';
 ```
 
+### Note
+
+Profanity language is used in this README for demonstration purposes only. Please be respectful.
+
 ## Usage
 
 ### **`supportedLangs`**
@@ -48,22 +52,12 @@ The `filter()` function will return a string with all curse words replaced with 
 import { filter } from 'curse-filter';
 
 filter('fuck you'); // '*** you'
-filter('fuck you', 'en'); // '*** you'
-filter('fuck you, coglione', ['en', 'it']); // '*** you, ***'
-filter('fuck you, coglione', ['en', 'it'], 'customPlaceholder'); // 'customPlaceholder you, customPlaceholder'
+filter('fuck you', { lang: 'en' }); // '*** you'
+filter('fuck you, coglione', { lang: ['en', 'it'] }); // '*** you, ***'
+filter('fuck you, coglione', { lang: ['en', 'it'], placeholder: 'customPlaceholder' }); // 'customPlaceholder you, customPlaceholder'
 ```
 
-Alternately, if you want to **reduce filtering time**, you can pass as second parameter a string of an array of string (all supported languages).
-
-```typescript
-import { filter } from 'curse-filter';
-
-const str = '<...>';
-
-filter(str); // automatically selects all languages
-filter(str, 'en');
-filter(str, ['en', 'es', 'fr', 'it']);
-```
+Note that the fewer languages you pass to the function's options object, the faster the filtering will be.
 
 ### **`detect()`**
 
@@ -74,20 +68,20 @@ import { detect } from 'curse-filter';
 
 // you can select the languages to detect in the second argument, like in the `filter()` function
 
-console.log(detect('Fuck you')); // true
-console.log(detect('Fuck you', 'en')); // true
-console.log(detect('Fuck you', ['en', 'fr'])); // true
-console.log(detect('Fuckyou', 'en')); // false, view next paragraph.
-console.log(detect('I love you')); // false
+detect('Fuck you'); // true
+detect('Fuck you', { lang: 'en' }); // true
+detect('Fuck you', { lang: ['en', 'fr'] }); // true
+detect('I love you'); // false
+detect('Fuckyou', { lang: 'en' }); // false, view next paragraph.
 ```
 
-For more rigid use cases, you can use rigidMode option to also detect curse words that are part of bigger words (For example, for hiding them!).
+For more **rigid use cases**, you can use `rigidMode` option to also detect curse words that are part of bigger words.
 
 ```typescript
 import { detect } from 'curse-filter';
 
-console.log(detect('Fuckyou', 'en')); // false, the word "Fuck" is inside of a bigger word: "Fuckyou"
-console.log(detect('Fuckyou', 'en', { rigidMode: true })); // true, the word "Fuck" is detected even if part of a bigger word
+detect('Fuckyou', { lang: 'en' }); // false, the word "Fuck" is inside of a bigger word: "Fuckyou"
+detect('Fuckyou', { lang: 'en', rigidMode: true }); // true, the word "Fuck" is detected even if part of a bigger word
 ```
 
 ## **Promise versions**
@@ -97,14 +91,8 @@ You can access promise versions of filter and detect functions from `curse-filte
 ```ts
 import { filter, detect } from 'curse-filter/promises';
 
-const main = async () => {
-    const filtered = await filter('Fuck you');
-    const detected = await detect('Fuck you');
-
-    console.log(filtered, detected); // '*** you', true
-};
-
-main();
+await filter('Fuck you'); // '*** you'
+await detect('Fuck you'); // true
 ```
 
 ## **Adding custom keywords to search for**
@@ -120,8 +108,7 @@ CustomKeywords.add('Hello'); // Hello
 CustomKeywords.addKeywords('Hey', 'Hi', ['Bonjour', 'Ciao']); // Hello, Hey, Hi, Bonjour, Ciao
 
 // The filter and detect functions automatically look for custom keywords added to the object
-const result = filter('Hey John!');
-console.log(result); // '*** John!'
+filter('Hey John!'); // '*** John!'
 ```
 
 ## **Express.js middlewares**
@@ -182,14 +169,23 @@ const lang: SupportedLang = 'en';
 ### **`Custom Set interfaces`**
 
 ```ts
-import { KeywordsSet, KeywordsSetConstructor } from 'curse-filter';
+// KeywordsSet is a Set<string> with a custom addKeywords method
+import type { KeywordsSet } from 'curse-filter';
+```
 
-/*
- * KeywordsSet is a Set<string> with a custom addKeywords method
- * KeywordsSetConstructor is a SetConstructor with a custom addKeywords method
- */
+```ts
+// KeywordsSetConstructor is a SetConstructor with a custom addKeywords method
+import type { KeywordsSetConstructor } from 'curse-filter';
 ```
 
 ## License
 
 [MIT](https://github.com/alessandrofoglia07/curse-filter/blob/main/LICENSE)
+
+<br>
+
+<div align='center'>
+
+Made with 💜 by [alessandrofoglia07](https://github.com/alessandrofoglia07)
+
+</div>
