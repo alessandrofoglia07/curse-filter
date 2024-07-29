@@ -13,6 +13,8 @@ import ru from './langs/ru.js';
 import sk from './langs/sk.js';
 import th from './langs/th.js';
 import uk from './langs/uk.js';
+import np from './langs/np.js';
+
 
 type Keywords = (string | string[] | string[][])[];
 
@@ -62,7 +64,8 @@ export const langs = new Map<string, string[]>([
     ['ru', ru],
     ['sk', sk],
     ['th', th],
-    ['uk', uk]
+    ['uk', uk],
+    ['np', np]
 ]);
 
 /**
@@ -76,7 +79,7 @@ export const supportedLangs: SupportedLang[] = [...langs.keys()] as SupportedLan
  * @example const english: SupportedLang = 'en'
  * const french: SupportedLang = 'fr'
  */
-export type SupportedLang = 'af' | 'cz' | 'de' | 'en' | 'es' | 'fi' | 'fr' | 'hi' | 'it' | 'nl' | 'pl' | 'ru' | 'sk' | 'th' | 'uk';
+export type SupportedLang = 'af' | 'cz' | 'de' | 'en' | 'es' | 'fi' | 'fr' | 'hi' | 'it' | 'nl' | 'pl' | 'ru' | 'sk' | 'th' | 'uk' | 'np';
 
 /**
  * Removes excess letters followed or preceded by "***" in a string.
