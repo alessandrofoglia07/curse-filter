@@ -1,8 +1,7 @@
 import { detect, filter } from '../../lib/index.js';
-import { detect as detectAsync, filter as filterAsync } from '../../lib/promises.js';
 
 // Smoke test 1: Check if sync functions are exported correctly
-if (typeof detect !== 'function' || typeof filter !== 'function' || typeof detectAsync !== 'function' || typeof filterAsync !== 'function') {
+if (typeof detect !== 'function' || typeof filter !== 'function') {
     console.error('\x1b[31m', 'Smoke Test Failed: Functions not exported correctly.');
     process.exit(1);
 }
@@ -11,24 +10,14 @@ if (typeof detect !== 'function' || typeof filter !== 'function' || typeof detec
 try {
     const testString = 'Fuck you';
 
-    const result1 = detect(testString);
+    const result1 = await detect(testString);
     if (result1 !== true) {
-        throw new Error(`Unexpected output. Output: ${result}`);
+        throw new Error(`Unexpected output. Output: ${result1}`);
     }
 
-    const result2 = filter(testString);
+    const result2 = await filter(testString);
     if (result2 !== '*** you') {
         throw new Error(`Unexpected output. Output: ${result2}`);
-    }
-
-    const asyncResult1 = await detectAsync(testString);
-    if (asyncResult1 !== true) {
-        throw new Error(`Unexpected output. Output: ${asyncResult1}`);
-    }
-
-    const asyncResult2 = await filterAsync(testString);
-    if (asyncResult2 !== '*** you') {
-        throw new Error(`Unexpected output. Output: ${asyncResult2}`);
     }
 
     console.log('\x1b[32m', 'Smoke Test Passed: Basic functionality works.');

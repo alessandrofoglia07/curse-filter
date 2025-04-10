@@ -1,23 +1,7 @@
-type Keywords = (string | string[] | string[][])[];
-export interface KeywordsSet<T> extends Set<T> {
-    addKeywords(...keywords: Keywords): void;
-}
-export interface KeywordsSetConstructor {
-    new <T = any>(values?: readonly T[] | null): KeywordsSet<T>;
-    readonly prototype: KeywordsSet<any>;
-}
-/**
- * Set of custom keywords to use in addition to the default ones
- * @example
- * CustomKeywords.add('foo');
- * CustomKeywords.addKeywords('foo', 'bar');
- * CustomKeywords.delete('foo');
- */
-export declare const CustomKeywords: KeywordsSet<string>;
-export declare const langs: Map<string, string[]>;
+export declare const loadLang: (lang: SupportedLang) => Promise<string[]>;
+export declare const loadLangSync: (lang: SupportedLang) => string[];
 /**
  * List of supported languages
- * @example ['en', 'fr', ...]
  */
 export declare const supportedLangs: SupportedLang[];
 /**
@@ -32,10 +16,17 @@ export type SupportedLang = 'af' | 'cz' | 'de' | 'en' | 'es' | 'fi' | 'fr' | 'hi
 export declare const removeExcess: (str: string, placeholder?: string) => string;
 export interface Options {
     /**
-     * Language to use. Use `true` or `undefined` to use all languages, or a language / array of languages to use.
-     * @default true
+     * Language to use. Use `undefined` to use all languages, or select a language / array of languages to use.
+     * @default undefined
      */
-    lang?: SupportedLang | SupportedLang[] | true;
+    lang?: SupportedLang | SupportedLang[];
+    /**
+     * Custom Set of words to look for.
+     * @example
+     * const customKeywords = new Set(['customWord1', 'customWord2']);
+     * await filter('customWord1', { customKeywords }) // '***'
+     */
+    customKeywords?: Set<string>;
 }
 export interface FilterOptions extends Options {
     /**
@@ -60,5 +51,11 @@ export interface DetectOptions extends Options {
      * @default 100
      */
     processedChunkSize?: number;
+    /**
+     * Custom Set of words to look for.
+     * @example
+     * const customKeywords = new Set(['customWord1', 'customWord2']);
+     * await filter('customWord1', { customKeywords }) // '***'
+     */
+    customKeywords?: Set<string>;
 }
-export {};

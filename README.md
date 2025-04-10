@@ -41,75 +41,87 @@ Profanity language is used in this README for demonstration purposes only. Pleas
 ```typescript
 import { supportedLangs } from 'curse-filter';
 
-console.log(supportedLangs); // This will log an array of supported languages
+// This will log an array of supported languages
+console.log(supportedLangs);
 ```
 
 ### **`filter()`**
 
-The `filter()` function will return a string with all curse words replaced with asterisks ("\*\*\*").
+The `filter()` function asynchronously replaces curse words in a string with asterisks ("\*\*\*") or a custom placeholder.
 
 ```typescript
 import { filter } from 'curse-filter';
 
-filter('fuck you'); // '*** you'
-filter('fuck you', { lang: 'en' }); // '*** you'
-filter('fuck you, coglione', { lang: ['en', 'it'] }); // '*** you, ***'
-filter('fuck you, coglione', { lang: ['en', 'it'], placeholder: 'customPlaceholder' }); // 'customPlaceholder you, customPlaceholder'
+// This must be used in an async function or top-level await context
+
+await filter('fuck you');
+// result: '*** you'
+
+await filter('fuck you', { lang: 'en' });
+// result: '*** you'
+
+await filter('fuck you, coglione', { lang: ['en', 'it'] });
+// result: '*** you, ***'
+
+await filter('fuck you, coglione', { lang: ['en', 'it'], placeholder: 'customPlaceholder' });
+// result: 'customPlaceholder you, customPlaceholder'
 ```
 
-Note that the fewer languages you pass to the function's options object, the faster the filtering will be.
+#### Parameters
+
+-   `str` _(string)_ – The input string to filter.
+
+-   `options` _(optional)_ – An object with:
+
+    -   `lang` _(string | string[] | true)_: One or more language codes (e.g., `'en'`, `'it'`, or `['en', 'it']`). If omitted, all supported languages will be used. Note that **the fewer languages** you pass to the function's options object, **the faster** the filtering will be.
+
+    -   `placeholder` _(string)_: The replacement string. Defaults to `'\*\*\*'`.
+
+    -   `customKeywords` _(Set\<string>)_: A Set to add custom words to look for in the string.
+
+#### Returns
+
+A `Promise<string>` with the filtered string.
 
 ### **`detect()`**
 
-The `detect()` function will return a boolean representing whether or not curse words are in a string.
+The `detect()` function asynchronously detects whether or not curse words are in a string.
 
 ```typescript
 import { detect } from 'curse-filter';
 
-// you can select the languages to detect in the second argument, like in the `filter()` function
+// This must be used in an async function or top-level await context
 
-detect('Fuck you'); // true
-detect('Fuck you', { lang: 'en' }); // true
-detect('Fuck you', { lang: ['en', 'fr'] }); // true
-detect('I love you'); // false
-detect('Fuckyou', { lang: 'en' }); // false, view next paragraph.
+await detect('fuck you');
+// result: true
+
+await detect('fuckyou');
+// false (no space, not detected by default)
+
+await detect('fuckyou', { rigidMode: true });
+// true (rigid mode allows substring matching)
+
+await detect('fuck you, coglione', { lang: ['en', 'it'] });
+// true
 ```
 
-For more **rigid use cases**, you can use `rigidMode` option to also detect curse words that are part of bigger words.
+#### Parameters
 
-```typescript
-import { detect } from 'curse-filter';
+-   `str` _(string)_ – The input string to scan.
 
-detect('Fuckyou', { lang: 'en' }); // false, the word "Fuck" is inside of a bigger word: "Fuckyou"
-detect('Fuckyou', { lang: 'en', rigidMode: true }); // true, the word "Fuck" is detected even if part of a bigger word
-```
+-   `options` _(optional)_ – An object with:
 
-## **Promise versions**
+    -   `lang` _(string | string[])_: One or more language codes (e.g., `'en'`, `'it'`, or `['en', 'it']`). If omitted, all supported languages will be used.
 
-You can access promise versions of filter and detect functions from `curse-filter/promises`.
+    -   `rigidMode` _(boolean)_: If `true`, performs substring detection (e.g., matches `"fuckyou"`). Defaults to `false`.
 
-```ts
-import { filter, detect } from 'curse-filter/promises';
+    -   `processedChunkSize` _(number)_: Optional internal chunk size for performance control (default is `100`).
 
-await filter('Fuck you'); // '*** you'
-await detect('Fuck you'); // true
-```
+    -   `customKeywords` _(Set\<string>)_: A Set to add custom words to look for in the string.
 
-## **Adding custom keywords to search for**
+#### Returns
 
-curse-filter offers a nice and familiar way to add strings or arrays of strings to the words to search for with the `CustomKeywords` [Set](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set)-like object.
-
-```ts
-import { filter, CustomKeywords } from 'curse-filter';
-
-CustomKeywords.add('Hello'); // Hello
-
-// Custom method of CustomKeywords object
-CustomKeywords.addKeywords('Hey', 'Hi', ['Bonjour', 'Ciao']); // Hello, Hey, Hi, Bonjour, Ciao
-
-// The filter and detect functions automatically look for custom keywords added to the object
-filter('Hey John!'); // '*** John!'
-```
+A `Promise<boolean>` – Resolves to true if profanity is detected, otherwise false.
 
 ## **Express.js middlewares**
 
@@ -117,7 +129,7 @@ curse-filter comes with built-in `express.js` middlewares.
 
 ### **`detectMiddleware`** middleware
 
-The `detectMiddleware` middleware analizes the whole `req.body` object for curses.
+The `detectMiddleware` middleware analizes the whole `req.body` object for curse words.
 
 ```ts
 import express, { Request, Response } from 'express';
@@ -139,7 +151,7 @@ app.post('/register', detectMiddleware, async (req: Request, res: Response) => {
 });
 ```
 
-You can configure the middleware with the following options:
+It is possible to configure the middleware with the following options:
 
 ```ts
 // Class for configuring the middleware
@@ -149,7 +161,12 @@ import { MiddlewaresConfig } from 'curse-filter';
 
 MiddlewareConfig.onError = null; // Called when a curse word is detected, before sending the response
 
-MiddlewareConfig.detectOptions = {}; // Options for the detect function
+MiddlewareConfig.detectOptions = {
+    lang: 'en', // Language(s) to use for detection
+    rigidMode: false, // If true, performs substring detection (e.g., matches "fuckyou")
+    processedChunkSize: 100, // Optional internal chunk size for performance control
+    customKeywords: new Set() // A Set to add custom words to look for in the string
+}; // Options for the detect function
 
 MiddlewareConfig.errorMessage = 'Not allowed content detected.'; // Message sent in the response
 
@@ -166,17 +183,9 @@ import { SupportedLang } from 'curse-filter';
 const lang: SupportedLang = 'en';
 ```
 
-### **`Custom Set interfaces`**
+# New Version v6.0.0 → v7.0.0
 
-```ts
-// KeywordsSet is a Set<string> with a custom addKeywords method
-import type { KeywordsSet } from 'curse-filter';
-```
-
-```ts
-// KeywordsSetConstructor is a SetConstructor with a custom addKeywords method
-import type { KeywordsSetConstructor } from 'curse-filter';
-```
+This version drops the `CustomKeywords` Set-like object to introduce a **quicker way of adding custom words** to look for and drops support for the synchronous versions of the functions, in favor of promise-based functions. This means that the `filter()` and `detect()` functions and the `detectMiddleware` middleware are now only asynchronous and return a promise for **increased performance**.
 
 ## License
 

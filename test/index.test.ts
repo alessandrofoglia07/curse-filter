@@ -1,9 +1,6 @@
-import { CustomKeywords } from '../src';
-import { filter, detect } from '../src/promises';
+import { filter, detect } from '../src';
 import longText from './mocks/longtext';
 import longText1 from './mocks/longtext1';
-
-CustomKeywords.add('bonjour');
 
 describe('filter', () => {
     it('should filter in one language', async () => {
@@ -22,7 +19,7 @@ describe('filter', () => {
     });
 
     it('should filter with custom keywords', () => {
-        const promise = filter('bonjour hey 123', { lang: 'en' });
+        const promise = filter('bonjour hey 123', { lang: 'en', customKeywords: new Set(['bonjour']) });
         expect(promise).resolves.toBe('*** hey 123');
     });
 });
@@ -63,7 +60,7 @@ describe('detect', () => {
     });
 
     it('should detect custom keywords', () => {
-        const promise = detect('bonjour hey 123', { lang: 'en' });
+        const promise = detect('bonjour hey 123', { lang: 'en', customKeywords: new Set(['bonjour']) });
         expect(promise).resolves.toBe(true);
     });
 });

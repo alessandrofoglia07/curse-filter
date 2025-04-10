@@ -1,75 +1,39 @@
-import af from './langs/af.js';
-import cz from './langs/cz.js';
-import de from './langs/de.js';
-import en from './langs/en.js';
-import es from './langs/es.js';
-import fi from './langs/fi.js';
-import fr from './langs/fr.js';
-import hi from './langs/hi.js';
-import it from './langs/it.js';
-import nl from './langs/nl.js';
-import pl from './langs/pl.js';
-import ru from './langs/ru.js';
-import sk from './langs/sk.js';
-import th from './langs/th.js';
-import uk from './langs/uk.js';
+const langCache = new Map<string, string[]>();
 
-type Keywords = (string | string[] | string[][])[];
-
-export interface KeywordsSet<T> extends Set<T> {
-    addKeywords(...keywords: Keywords): void;
-}
-
-export interface KeywordsSetConstructor {
-    new <T = any>(values?: readonly T[] | null): KeywordsSet<T>;
-    readonly prototype: KeywordsSet<any>;
-}
-
-const KeywordsSet: KeywordsSetConstructor = Set as never;
-
-KeywordsSet.prototype.addKeywords = function (...keywords: Keywords) {
-    keywords.forEach((keyword) => {
-        if (Array.isArray(keyword)) {
-            keyword.forEach((word) => {
-                this.add(word);
-            });
-        } else {
-            this.add(keyword);
-        }
-    });
+export const loadLang = async (lang: SupportedLang): Promise<string[]> => {
+    if (langCache.has(lang)) {
+        return langCache.get(lang) as string[];
+    }
+    if (!supportedLangs.includes(lang)) {
+        throw new Error(`Language '${lang}' is not supported`);
+    }
+    const module = await import(`./langs/${lang}.js`);
+    if (!module.default) {
+        throw new Error(`Language '${lang}' is not supported`);
+    }
+    langCache.set(lang, module.default);
+    return module.default;
 };
-/**
- * Set of custom keywords to use in addition to the default ones
- * @example
- * CustomKeywords.add('foo');
- * CustomKeywords.addKeywords('foo', 'bar');
- * CustomKeywords.delete('foo');
- */
-export const CustomKeywords = new KeywordsSet<string>();
 
-export const langs = new Map<string, string[]>([
-    ['af', af],
-    ['cz', cz],
-    ['de', de],
-    ['en', en],
-    ['es', es],
-    ['fi', fi],
-    ['fr', fr],
-    ['hi', hi],
-    ['it', it],
-    ['nl', nl],
-    ['pl', pl],
-    ['ru', ru],
-    ['sk', sk],
-    ['th', th],
-    ['uk', uk]
-]);
+export const loadLangSync = (lang: SupportedLang): string[] => {
+    if (langCache.has(lang)) {
+        return langCache.get(lang) as string[];
+    }
+    if (!supportedLangs.includes(lang)) {
+        throw new Error(`Language '${lang}' is not supported`);
+    }
+    const module = require(`./langs/${lang}.js`);
+    if (!module.default) {
+        throw new Error(`Language '${lang}' is not supported`);
+    }
+    langCache.set(lang, module.default);
+    return module.default;
+};
 
 /**
  * List of supported languages
- * @example ['en', 'fr', ...]
  */
-export const supportedLangs: SupportedLang[] = [...langs.keys()] as SupportedLang[];
+export const supportedLangs: SupportedLang[] = ["af", "cz", "de", "en", "es", "fi", "fr", "hi", "it", "nl", "pl", "ru", "sk", "th", "uk"] as SupportedLang[];
 
 /**
  * Supported language type
@@ -89,10 +53,17 @@ export const removeExcess = (str: string, placeholder: string = '***'): string =
 
 export interface Options {
     /**
-     * Language to use. Use `true` or `undefined` to use all languages, or a language / array of languages to use.
-     * @default true
+     * Language to use. Use `undefined` to use all languages, or select a language / array of languages to use.
+     * @default undefined
      */
-    lang?: SupportedLang | SupportedLang[] | true;
+    lang?: SupportedLang | SupportedLang[];
+    /**
+     * Custom Set of words to look for.
+     * @example
+     * const customKeywords = new Set(['customWord1', 'customWord2']);
+     * await filter('customWord1', { customKeywords }) // '***'
+     */
+    customKeywords?: Set<string>;
 }
 
 export interface FilterOptions extends Options {
@@ -119,4 +90,11 @@ export interface DetectOptions extends Options {
      * @default 100
      */
     processedChunkSize?: number;
+    /**
+     * Custom Set of words to look for.
+     * @example
+     * const customKeywords = new Set(['customWord1', 'customWord2']);
+     * await filter('customWord1', { customKeywords }) // '***'
+     */
+    customKeywords?: Set<string>;
 }
